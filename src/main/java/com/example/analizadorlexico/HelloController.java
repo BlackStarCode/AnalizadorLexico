@@ -60,45 +60,53 @@ public class HelloController implements Initializable {
         colum3.setCellValueFactory(new PropertyValueFactory<>("noColum"));
         colum4.setCellValueFactory(new PropertyValueFactory<>("noFila"));
     }
+    public void definirTipo(String cadena, int fila, int columna) {
+        // Variables válidas
+        Pattern variable = Pattern.compile("[a-zA-Z_$][a-zA-Z_$0-9]*");
+        // Números válidos
+        Pattern numero = Pattern.compile("-?\\d+(\\.\\d+)?([eE]-?\\d+)?");
 
-    @FXML
-    protected void calcular() {
-        //limpiar tabla
-        tbl1.getItems().clear();
-        //iniciar contador (para las filas)
-        int contador = 1;
-        // Dividir el contenido del TextArea en líneas
-        String[] lineas = text1.getText().split("\n");
-
-        // Recorrer cada línea
-        for (String linea : lineas) {
-            // Dividir la cadena por el espacio en blanco
-            String[] elementos = linea.split("\\s+");
-            //Recorrer lista de elementos
-            for (String elemento : elementos) {
-                System.out.println(elemento);
-                definirTipo(elemento, contador);
-            }
-            contador++;
+        // Verificando tipo
+        if (palabrasReservadas.contains(cadena)) {
+            tbl1.getItems().add(new Datos(cadena, "Reservada", columna, fila));
+        } else if (simbolos.contains(cadena)) {
+            tbl1.getItems().add(new Datos(cadena, "Simbolo", columna, fila));
+        } else if (variable.matcher(cadena).matches()) {
+            tbl1.getItems().add(new Datos(cadena, "variable", columna, fila));
+        } else if (numero.matcher(cadena).matches()) {
+            tbl1.getItems().add(new Datos(cadena, "numero", columna, fila));
+        } else {
+            System.out.println("No es fila: " + fila + ", columna: " + columna);
         }
     }
 
-    public void definirTipo(String cadena, int fila){
-        //varibles validas
-        Pattern variable = Pattern.compile("[a-zA-Z_$][a-zA-Z_$0-9]*");
-        //numeros validos
-        Pattern numero = Pattern.compile("-?\\d+(\\.\\d+)?([eE]-?\\d+)?");
+    @FXML
+    protected void calcular() {
+        // Limpiar tabla
+        tbl1.getItems().clear();
+        // Iniciar contador (para las filas)
+        int contadorFila = 1;
 
-        //verificando tipo
-        if(palabrasReservadas.contains(cadena)){
-            tbl1.getItems().add(new Datos(cadena, "Reservada", 1,fila));
-        } else if (simbolos.contains(cadena)) {
-            tbl1.getItems().add(new Datos(cadena, "Simbolo",1, fila));
-        } else if (variable.matcher(cadena).matches()) {
-            tbl1.getItems().add(new Datos(cadena, "variable",1, fila));
-        }else if (numero.matcher(cadena).matches()) {
-            tbl1.getItems().add(new Datos(cadena, "numero",1, fila));
-        } else System.out.println("No es fila: " + String.valueOf(fila));
+        // Dividir el contenido del TextArea teniendo en cuenta los límites de palabras no alfanuméricas
+        String[] lineas = text1.getText().split("\\n");
+
+        // Recorrer cada línea
+        for (String linea : lineas) {
+            // Dividir la cadena teniendo en cuenta los límites de palabras no alfanuméricas
+            String[] elementos = linea.split("(?<=\\W)|(?=\\W)");
+            int contadorColumna = 1;
+
+            // Recorrer lista de elementos
+            for (String elemento : elementos) {
+                // Evitar procesar espacios en blanco vacíos
+                if (!elemento.trim().isEmpty()) {
+                    System.out.println("Fila: " + contadorFila + ", Columna: " + contadorColumna + ", Elemento: " + elemento);
+                    definirTipo(elemento, contadorFila, contadorColumna);
+                }
+                contadorColumna++;
+            }
+            contadorFila++;
+        }
     }
 
     //limpiar tabla y textArea
