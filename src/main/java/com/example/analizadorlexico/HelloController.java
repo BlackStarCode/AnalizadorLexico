@@ -36,9 +36,9 @@ public class HelloController implements Initializable {
 
     //lista palabra reservadas
     ObservableList<String> palabrasReservadas = FXCollections.observableArrayList("byte", "short", "int","long","char","float","double","boolean","void","if","else","switch","case","default"
-        ,"while","do","for","break","continue","try","catch","finally","throw","throws","private","protected","public","class","interface","enum","import"
-        ,"package","extends","implements","static","final","abstract","default","new","instanceof","this","super","return","var","synchronized","volatile","native","transient","assert","strictfp"
-        ,"const","goto","true","false","null");
+        ,"while","do","for","break","continue","try","catch","finally","throw","throws","private","protected","public","class","interface","enum","import","Main","main","compile","run","package","extends","implements","static","final","abstract","default","new","instanceof","this","super","return","var","synchronized","volatile","native","string","transient","assert","strictfp","Compile","ObservableList","Observable","ArrayList","ResourceBundle","Pattern","FXML","PropertyValueFactory","URL","FXMLLoader","Scene","Stage","IOException","HelloApplication","Application","launch","HelloController","Initializable","Button","TableColumn","TableView","TextArea","TextField","Label","CheckBox","RadioButton","ComboBox","DatePicker","ProgressBar","ProgressIndicator","Slider","Spinner","SplitPane","ScrollPane","Pagination","Pagination","Accordion","TitledPane","TabPane","ToolBar","MenuBar","Menu","MenuItem","ContextMenu","ContextMenuEvent","Dialog","Alert","FileChooser","DirectoryChooser","FileChooser"
+        ,"package","extends","implements","static","final","abstract","default","new","instanceof","this","super","return","var","synchronized","volatile","native","string","transient","assert","strictfp","Out","PrintStream","InputStream","OutputStream","Reader","Writer","File","FileReader","FileWriter","BufferedReader","BufferedWriter","PrintWriter","InputStreamReader","OutputStreamWriter","Print","print","Println","println"
+        ,"const","goto","true","false","null","String","System","out","println","print","Scanner","nextInt","nextLine","nextDouble","nextBoolean","nextFloat","nextLong","nextShort","nextByte","next", "getItems","setItems", "getSelectedItem", "setSelectedItem","At","add","addAll","clear","contains","get","indexOf","isEmpty","remove","removeAll","retainAll","set","size","sort","subList","toArray","toString","equals","hashCode","notify","notifyAll","wait","clone","finalize","getClass","registerNatives","at","add","addAll","clear","contains","get","indexOf","isEmpty","remove","removeAll","retainAll","set","size","sort","subList","toArray","toString","equals","hashCode","notify","notifyAll","wait","clone","finalize","getClass","registerNatives","at","add","addAll","clear","contains","get","indexOf","isEmpty","remove","removeAll","retainAll","set","size","sort","subList","toArray","toString","equals","hashCode","notify","notifyAll","wait","clone","finalize","getClass","registerNatives","at","add","addAll","clear","contains","get","indexOf","isEmpty","remove","removeAll","retainAll","set","size","sort","subList","toArray","toString","equals","hashCode","notify","notifyAll","wait","clone","finalize","getClass","registerNatives","at","add","addAll","clear","contains","get","indexOf","isEmpty","remove","removeAll","retainAll","set","size","sort","subList","toArray","toString","equals","hashCode","notify","notifyAll","wait","clone","finalize","getClass","registerNatives","at","add","addAll","clear","contains","get","indexOf","isEmpty","remove","removeAll","retainAll","set","size","sort","subList","toArray","toString","equals","hashCode","notify","notifyAll","wait","clone","finalize","getClass","registerNatives","at","add","addAll","clear","contains","get","indexOf","isEmpty","remove","removeAll","retainAll","set","size","sort","subList","toArray","toString","equals","hashCode","notify","notifyAll","wait","clone","finalize","getClass","registerNatives","Matches","match","matches","Match");
 
     //lista de simbolos
     ObservableList<String> simbolos = FXCollections.observableArrayList(
@@ -50,7 +50,13 @@ public class HelloController implements Initializable {
             "==", "!=", "<", ">", "<=", ">=",
             // Operadores especiales
             "++", "--", ".", "(", ")",
-            "&&", "||", "{", "}", ";"
+            "&&", "||", "{", "}", ";",
+            "!", "&", "|", "^", "~",
+            "<<", ">>", ">>>", "<<<",
+            "++", "--",
+            "?", ":", ",", "->",
+            // detecta comillas
+            "\"", "'"
     );
 
     @Override
@@ -61,12 +67,9 @@ public class HelloController implements Initializable {
         colum4.setCellValueFactory(new PropertyValueFactory<>("noFila"));
     }
     public void definirTipo(String cadena, int fila, int columna) {
-        // Variables válidas
         Pattern variable = Pattern.compile("[a-zA-Z_$][a-zA-Z_$0-9]*");
-        // Números válidos
         Pattern numero = Pattern.compile("-?\\d+(\\.\\d+)?([eE]-?\\d+)?");
 
-        // Verificando tipo
         if (palabrasReservadas.contains(cadena)) {
             tbl1.getItems().add(new Datos(cadena, "Reservada", columna, fila));
         } else if (simbolos.contains(cadena)) {
